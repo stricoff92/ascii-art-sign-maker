@@ -20,5 +20,7 @@ pip install -r requirements.txt
 # help message
 python3 app.py -h
 
+python3 app.py /path/to/input.jpg 20 93 35
+
 ```
 

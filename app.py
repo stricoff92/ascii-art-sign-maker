@@ -2,6 +2,7 @@
 import argparse
 import datetime as dt
 
+
 # Loggers
 def log(msg: str, level):
     print(f"[{level}] [{dt.datetime.now().isoformat()}] - {msg}")
@@ -17,7 +18,7 @@ def log_err(msg: str):
 
 
 
-# App Entry Point
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="ASCII Art Sign Maker")
@@ -27,15 +28,16 @@ def parse_args():
     parser.add_argument("chars_per_page_height", type=int, help="Number of character rows per page")
     return parser.parse_args()
 
-
 def app():
     log_info("script starting")
-
     args = parse_args()
     log_debug(f"path_to_file: {args.path_to_file}")
     log_debug(f"pixels_per_char: {args.pixels_per_char}")
     log_debug(f"chars_per_page_width: {args.chars_per_page_width}")
     log_debug(f"chars_per_page_height: {args.chars_per_page_height}")
 
+
+
 if __name__ == "__main__":
+    # App Entry Point
     app()
