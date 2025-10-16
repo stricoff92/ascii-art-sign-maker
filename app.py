@@ -8,7 +8,7 @@ import sys
 
 # 3rd party library imports
 import numpy as np
-from PIL import Image
+from PIL import ImageOps
 from ascii_magic import AsciiArt, from_image
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -17,7 +17,7 @@ from ascii_magic import AsciiArt, from_image
 def log(msg: str, level):
     if len(level) > 6:
         raise Exception(f"level {level} has too many characters")
-    padded_level = level + (" " * (6 - len(level)))
+    padded_level = level + (" " * (5 - len(level)))
     print(f"[{padded_level}] [{dt.datetime.now().isoformat()}] - {msg}")
 def log_debug(msg: str):
     log(msg, "DEBUG")
@@ -49,6 +49,7 @@ def get_out_file_full_img(start_ts: str, path_to_input_file: str):
 
 def transform_pixels_to_text(
     dryrun: bool,
+    invert: bool,
     start_ts: str,
     path_to_file: str,
     columns: int,
@@ -57,6 +58,9 @@ def transform_pixels_to_text(
     chars_per_page_height: int
 ):
     aa = AsciiArt.from_image(path_to_file)
+    if invert:
+        aa.image = ImageOps.invert(aa.image)
+
     text = aa.to_ascii(columns=columns, monochrome=True, width_ratio=width_ratio)
     if not dryrun:
         with open(get_out_file_full_img(start_ts, path_to_file), "w") as fp:
@@ -104,6 +108,7 @@ def parse_args():
     parser.add_argument("width_ratio", type=float)
     parser.add_argument("chars_per_page_width", type=int)
     parser.add_argument("chars_per_page_height", type=int)
+    parser.add_argument('-i', '--invert', action='store_true', help="Invert image pixels")
     parser.add_argument('-d', '--dryrun', action='store_true', help="Calculate meta data but don't create any files")
     return parser.parse_args()
 
@@ -116,10 +121,12 @@ def app():
     log_debug(f"arg: width_ratio: {args.width_ratio}")
     log_debug(f"arg: chars_per_page_width: {args.chars_per_page_width}")
     log_debug(f"arg: chars_per_page_height: {args.chars_per_page_height}")
+    log_debug(f"arg: invert {args.invert}")
     log_debug(f"arg: dryrun {args.dryrun}")
 
     transform_pixels_to_text(
         args.dryrun,
+        args.invert,
         start_ts,
         args.path_to_file,
         args.columns,
