@@ -4,6 +4,11 @@ Convert images into ASCII art for printing on signs
 ## Installation
 
 ```bash
+# Inside the repo's root directory
+
+# create output directory
+mkdir outputs
+
 # create virtual environment
 python3 -m venv env
 source env/bin/activate
@@ -19,6 +24,7 @@ pip install -r requirements.txt
 
 # help message
 python3 app.py -h
+
 
 python3 app.py /path/to/input.jpg 20 93 35
 
