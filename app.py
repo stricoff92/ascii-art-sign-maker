@@ -39,7 +39,8 @@ def get_out_file_name(start_ts: str, path_to_input_file: str, w_ix: int, h_ix: i
 
 
 def get_chunk(
-    frame: np.ndarray, x1: int, x2: int, y1: int, y2: int):
+    frame: np.ndarray, x1: int, x2: int, y1: int, y2: int
+):
     return frame[y1:y2, x1:x2]
 
 def transform_pixels_to_text(
