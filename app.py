@@ -7,10 +7,8 @@ import os
 # 3rd party library imports
 from PIL import Image
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
-
-# Loggers
 def log(msg: str, level):
     if len(level) > 6:
         raise Exception(f"level {level} has too many characters")
@@ -25,6 +23,8 @@ def log_warn(msg: str):
 def log_err(msg: str):
     log(msg, "ERR")
 
+
+
 def get_out_directory():
     parent = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(parent, "outputs")
@@ -34,6 +34,16 @@ def get_out_file_name(start_ts: str, path_to_input_file: str, ix: int):
     input_file = input_file_parts[len(input_file_parts) - 1]
     input_file_root = input_file.split(".")[0]
     return os.path.join(get_out_directory(), f"{start_ts}-{input_file_root}-{ix}.txt")
+
+
+
+def transform_pixels_to_text(
+    im,
+    pixels_per_char: int,
+    chars_per_page_width: int,
+    chars_per_page_height: int
+):
+    pass
 
 
 
@@ -58,7 +68,12 @@ def app():
     pix = im.load()
     log_info(f"image size: {im.size}")
 
-    print(get_out_file_name(start_ts, args.path_to_file, 5))
+    text_generator = transform_pixels_to_text(im, args.pixels_per_char, args.chars_per_page_width, args.chars_per_page_height)
+    for ix, text in enumerate(text_generator):
+        out_file = get_out_file_name(start_ts, args.path_to_file, ix)
+        with open(out_file, "w") as fp:
+            fp.write(text)
+            log_info(f"{len(text)} chars written to {out_file}")
 
 if __name__ == "__main__":
     # App Entry Point
