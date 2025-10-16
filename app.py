@@ -2,7 +2,7 @@
 # standard library imports
 import argparse
 import datetime as dt
-import math
+from math import floor, ceil
 import os
 import sys
 
@@ -56,8 +56,8 @@ def transform_pixels_to_text(
     full_chars_count_height = img_h / height_pixels_per_char
     log_debug(f"sign char count dims {full_chars_count_width}x{full_chars_count_height}")
 
-    page_count_width = math.ceil(full_chars_count_width / chars_per_page_width)
-    page_count_height = math.ceil(full_chars_count_height / chars_per_page_height)
+    page_count_width = ceil(full_chars_count_width / chars_per_page_width)
+    page_count_height = ceil(full_chars_count_height / chars_per_page_height)
     log_debug(f"sign page counts {page_count_width}x{page_count_height}")
 
     frame = np.asarray(im)
