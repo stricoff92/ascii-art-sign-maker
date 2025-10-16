@@ -1,11 +1,21 @@
 
+# standard library imports
 import argparse
 import datetime as dt
+import os
+
+# 3rd party library imports
+from PIL import Image
+
+
 
 
 # Loggers
 def log(msg: str, level):
-    print(f"[{level}] [{dt.datetime.now().isoformat()}] - {msg}")
+    if len(level) > 6:
+        raise Exception(f"level {level} has too many characters")
+    padded_level = level + (" " * (6 - len(level)))
+    print(f"[{padded_level}] [{dt.datetime.now().isoformat()}] - {msg}")
 def log_debug(msg: str):
     log(msg, "DEBUG")
 def log_info(msg: str):
@@ -15,8 +25,15 @@ def log_warn(msg: str):
 def log_err(msg: str):
     log(msg, "ERR")
 
+def get_out_directory():
+    parent = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(parent, "outputs")
 
-
+def get_out_file_name(start_ts: str, path_to_input_file: str, ix: int):
+    input_file_parts = path_to_input_file.split("/")
+    input_file = input_file_parts[len(input_file_parts) - 1]
+    input_file_root = input_file.split(".")[0]
+    return os.path.join(get_out_directory(), f"{start_ts}-{input_file_root}-{ix}.txt")
 
 
 
@@ -29,6 +46,7 @@ def parse_args():
     return parser.parse_args()
 
 def app():
+    start_ts = dt.datetime.now().isoformat()
     log_info("script starting")
     args = parse_args()
     log_debug(f"path_to_file: {args.path_to_file}")
@@ -36,7 +54,11 @@ def app():
     log_debug(f"chars_per_page_width: {args.chars_per_page_width}")
     log_debug(f"chars_per_page_height: {args.chars_per_page_height}")
 
+    im = Image.open(args.path_to_file)
+    pix = im.load()
+    log_info(f"image size: {im.size}")
 
+    print(get_out_file_name(start_ts, args.path_to_file, 5))
 
 if __name__ == "__main__":
     # App Entry Point
